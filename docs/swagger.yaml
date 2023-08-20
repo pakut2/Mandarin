@@ -1,0 +1,50 @@
+definitions:
+  notification_dto.CreateNotificationDto:
+    properties:
+      deviceToken:
+        example: fIuoGe66REq_eyZaN2V8E0
+        type: string
+      lineNumber:
+        example: "199"
+        type: string
+      precedenceMinutes:
+        example: 10
+        maximum: 60
+        minimum: 1
+        type: integer
+      providerName:
+        example: ztm
+        type: string
+      stopId:
+        example: "1461"
+        type: string
+    required:
+    - deviceToken
+    - lineNumber
+    - stopId
+    type: object
+info:
+  contact: {}
+paths:
+  /notifications:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create Notification
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/notification_dto.CreateNotificationDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      summary: Create Notification
+      tags:
+      - notifications
+swagger: "2.0"

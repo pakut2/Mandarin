@@ -1,0 +1,75 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/notifications": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notifications"
+                ],
+                "summary": "Create Notification",
+                "parameters": [
+                    {
+                        "description": "Create Notification",
+                        "name": "notification",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/notification_dto.CreateNotificationDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "notification_dto.CreateNotificationDto": {
+            "type": "object",
+            "required": [
+                "deviceToken",
+                "lineNumber",
+                "stopId"
+            ],
+            "properties": {
+                "deviceToken": {
+                    "type": "string",
+                    "example": "fIuoGe66REq_eyZaN2V8E0"
+                },
+                "lineNumber": {
+                    "type": "string",
+                    "example": "199"
+                },
+                "precedenceMinutes": {
+                    "type": "integer",
+                    "maximum": 60,
+                    "minimum": 1,
+                    "example": 10
+                },
+                "providerName": {
+                    "type": "string",
+                    "example": "ztm"
+                },
+                "stopId": {
+                    "type": "string",
+                    "example": "1461"
+                }
+            }
+        }
+    }
+}

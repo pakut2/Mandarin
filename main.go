@@ -1,28 +1,28 @@
 package main
 
 import (
+	"github.com/gofiber/swagger"
+	"github.com/pakut2/mandarin/cmd/notification_api"
 	"github.com/pakut2/mandarin/config"
+	_ "github.com/pakut2/mandarin/docs"
 	"github.com/pakut2/mandarin/pkg/database"
 	"github.com/pakut2/mandarin/pkg/server"
 )
 
 func main() {
-	err := config.LoadEnvVariables()
-	if err != nil {
+	if err := config.LoadEnvVariables(); err != nil {
 		panic(err)
 	}
 
-	err = database.InitConnection()
-	if err != nil {
+	if err := database.InitConnection(); err != nil {
 		panic(err)
 	}
-
 	defer database.CloseConnection()
 
 	server := server.InitServer()
-	if err != nil {
-		panic(err)
-	}
 
+	notification_api.InitApi(server)
+
+	server.Get("/api/*", swagger.HandlerDefault)
 	server.Listen(":" + config.Env.PORT)
 }

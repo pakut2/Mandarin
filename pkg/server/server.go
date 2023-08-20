@@ -7,12 +7,14 @@ import (
 )
 
 func InitServer() *fiber.App {
-	app := fiber.New()
+	server := fiber.New()
 
-	app.Use(recover.New())
-	app.Use(logger.New(logger.Config{
+	server.Use(recover.New())
+	server.Use(logger.New(logger.Config{
 		Format: "[${ip}]:${port} ${status} - ${method} ${path} ${latency}\n",
 	}))
 
-	return app
+	initValidator()
+
+	return server
 }

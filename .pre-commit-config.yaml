@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/dnephin/pre-commit-golang
+    rev: v0.5.1
+    hooks:
+      - id: go-fmt
+      - id: go-imports
+
+  - repo: local
+    hooks:
+      - id: docs
+        name: Generate API Docs
+        entry: /bin/bash -c 'make docs-gen'
+        language: script
+        pass_filenames: false

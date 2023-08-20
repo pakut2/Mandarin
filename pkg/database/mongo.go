@@ -12,17 +12,15 @@ var mongoClient *mongo.Client
 var databaseName string
 
 func InitConnection() error {
-	mongoUri := config.Env.MONGO_URI
 	databaseName = config.Env.DATABASE_NAME
 
 	var err error
-	mongoClient, err = mongo.Connect(context.Background(), options.Client().ApplyURI(mongoUri))
+	mongoClient, err = mongo.Connect(context.Background(), options.Client().ApplyURI(config.Env.MONGO_URI))
 	if err != nil {
 		return err
 	}
 
-	err = mongoClient.Ping(context.Background(), nil)
-	if err != nil {
+	if err = mongoClient.Ping(context.Background(), nil); err != nil {
 		return err
 	}
 
@@ -30,8 +28,7 @@ func InitConnection() error {
 }
 
 func CloseConnection() {
-	err := mongoClient.Disconnect(context.Background())
-	if err != nil {
+	if err := mongoClient.Disconnect(context.Background()); err != nil {
 		panic(err)
 	}
 }

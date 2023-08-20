@@ -13,16 +13,14 @@ type EnvVariables struct {
 	PORT          string
 }
 
-var Env EnvVariables
+var Env *EnvVariables
 
 func LoadEnvVariables() error {
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		return err
 	}
 
-	err = validateEnvVariables()
-	if err != nil {
+	if err := validateEnvVariables(); err != nil {
 		return err
 	}
 
@@ -45,7 +43,7 @@ func validateEnvVariables() error {
 		return errors.New("PORT environment variable is not set")
 	}
 
-	Env = EnvVariables{
+	Env = &EnvVariables{
 		MONGO_URI:     mongoUri,
 		DATABASE_NAME: databaseName,
 		PORT:          port,
