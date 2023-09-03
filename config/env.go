@@ -8,6 +8,7 @@ import (
 )
 
 type EnvVariables struct {
+	GO_ENV        string
 	MONGO_URI     string
 	DATABASE_NAME string
 	PORT          string
@@ -28,6 +29,11 @@ func LoadEnvVariables() error {
 }
 
 func validateEnvVariables() error {
+	environment := os.Getenv("GO_ENV")
+	if environment == "" {
+		return errors.New("GO_ENV environment variable is not set")
+	}
+
 	mongoUri := os.Getenv("MONGO_URI")
 	if mongoUri == "" {
 		return errors.New("MONGO_URI environment variable is not set")
@@ -44,6 +50,7 @@ func validateEnvVariables() error {
 	}
 
 	Env = &EnvVariables{
+		GO_ENV:        environment,
 		MONGO_URI:     mongoUri,
 		DATABASE_NAME: databaseName,
 		PORT:          port,

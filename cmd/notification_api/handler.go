@@ -26,6 +26,7 @@ func CreateNotification(service notification.Service) fiber.Handler {
 		}
 
 		notification, err := service.CreateNotification(&createNotificationDto)
+
 		if err != nil {
 			return c.Status(http.StatusInternalServerError).JSON(err.Error())
 		}

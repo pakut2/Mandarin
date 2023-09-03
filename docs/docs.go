@@ -48,6 +48,34 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/ztm/stop/{stopId}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ztm"
+                ],
+                "summary": "Get ZTM stop with all line numbers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ZTM Stop ID",
+                        "name": "stopId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -56,7 +84,8 @@ const docTemplate = `{
             "required": [
                 "deviceToken",
                 "lineNumber",
-                "stopId"
+                "stopId",
+                "stopName"
             ],
             "properties": {
                 "deviceToken": {
@@ -67,19 +96,23 @@ const docTemplate = `{
                     "type": "string",
                     "example": "199"
                 },
-                "precedenceMinutes": {
+                "providerName": {
+                    "type": "string",
+                    "example": "ztm"
+                },
+                "reminderTime": {
                     "type": "integer",
                     "maximum": 60,
                     "minimum": 1,
                     "example": 10
                 },
-                "providerName": {
-                    "type": "string",
-                    "example": "ztm"
-                },
                 "stopId": {
                     "type": "string",
                     "example": "1461"
+                },
+                "stopName": {
+                    "type": "string",
+                    "example": "Przymorze Wielkie"
                 }
             }
         }

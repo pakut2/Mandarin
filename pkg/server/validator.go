@@ -17,5 +17,5 @@ func initValidator() {
 }
 
 func supportedProvider(field validator.FieldLevel) bool {
-	return slices.Contains(constants.SCHEDULE_PROVIDERS, types.ScheduleProvider(field.Field().String()))
+	return slices.Contains(constants.SCHEDULE_PROVIDERS, types.ScheduleProviderName(field.Field().String()))
 }

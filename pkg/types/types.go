@@ -1,3 +1,3 @@
 package types
 
-type ScheduleProvider string
+type ScheduleProviderName string

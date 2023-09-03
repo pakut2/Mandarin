@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/pakut2/mandarin/config"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -35,4 +36,20 @@ func CloseConnection() {
 
 func GetCollection(name string) *mongo.Collection {
 	return mongoClient.Database(databaseName).Collection(name)
+}
+
+func ToDoc(data interface{}) (*bson.M, error) {
+	bsonData, err := bson.Marshal(data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var document *bson.M
+
+	if err := bson.Unmarshal(bsonData, &document); err != nil {
+		return nil, err
+	}
+
+	return document, nil
 }

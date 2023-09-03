@@ -3,9 +3,9 @@ package constants
 import "github.com/pakut2/mandarin/pkg/types"
 
 var (
-	SCHEDULE_PROVIDERS = []types.ScheduleProvider{ZTM}
+	SCHEDULE_PROVIDERS = []types.ScheduleProviderName{ZTM}
 )
 
 const (
-	ZTM types.ScheduleProvider = "ztm"
+	ZTM types.ScheduleProviderName = "ztm"
 )

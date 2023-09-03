@@ -7,21 +7,25 @@ definitions:
       lineNumber:
         example: "199"
         type: string
-      precedenceMinutes:
+      providerName:
+        example: ztm
+        type: string
+      reminderTime:
         example: 10
         maximum: 60
         minimum: 1
         type: integer
-      providerName:
-        example: ztm
-        type: string
       stopId:
         example: "1461"
+        type: string
+      stopName:
+        example: Przymorze Wielkie
         type: string
     required:
     - deviceToken
     - lineNumber
     - stopId
+    - stopName
     type: object
 info:
   contact: {}
@@ -47,4 +51,22 @@ paths:
       summary: Create Notification
       tags:
       - notifications
+  /ztm/stop/{stopId}:
+    get:
+      parameters:
+      - description: ZTM Stop ID
+        in: path
+        name: stopId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      summary: Get ZTM stop with all line numbers
+      tags:
+      - ztm
 swagger: "2.0"
