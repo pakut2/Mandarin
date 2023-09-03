@@ -30,7 +30,11 @@ func NewMessagingService(firebaseAdmin *firebase.App) (MessagingService, error) 
 }
 
 func (s *messagingService) SendMessage(deviceToken string, title string, payload string) error {
-	messageId, err := s.firebaseMessaging.Send(context.Background(), &messaging.Message{Token: deviceToken, Notification: &messaging.Notification{Title: title, Body: payload}, Android: &messaging.AndroidConfig{Notification: &messaging.AndroidNotification{Priority: messaging.PriorityHigh}}})
+	messageId, err := s.firebaseMessaging.Send(context.Background(),
+		&messaging.Message{
+			Token:        deviceToken,
+			Notification: &messaging.Notification{Title: title, Body: payload},
+			Android:      &messaging.AndroidConfig{Notification: &messaging.AndroidNotification{Priority: messaging.PriorityHigh}}})
 
 	if err != nil {
 		logger.Logger.Errorf("error sending message, err: %v", err)

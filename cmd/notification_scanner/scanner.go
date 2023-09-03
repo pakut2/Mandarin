@@ -30,10 +30,8 @@ func scanNotifications(notificationService notification_pkg.Service, messagingSe
 			continue
 		}
 
-		notificationTitle := "Remember " + notification.LineNumber
-		notificationBody := notification.StopName + " is being invaded by the " + notification.LineNumber + " (" + strconv.Itoa(notification.ReminderTime) + "min)"
-
-		messagingService.SendMessage(notification.DeviceToken, notificationTitle, notificationBody)
+		notificationBody := notification.LineNumber + "departs in " + strconv.Itoa(notification.ReminderTime) + "min"
+		messagingService.SendMessage(notification.DeviceToken, notification.StopName, notificationBody)
 
 		notificationService.UpdateNotification(notification.Id, notification_pkg.UpdateNotificationData{Delivered: true})
 	}
