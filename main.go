@@ -40,5 +40,5 @@ func main() {
 	notification_scanner.InitScanner(firebaseAdmin)
 
 	server.Get("/api/*", swagger.HandlerDefault)
-	server.Listen(":" + config.Env.PORT)
+	server.Listen("0.0.0.0:" + config.Env.PORT)
 }

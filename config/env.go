@@ -3,8 +3,6 @@ package config
 import (
 	"errors"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 type EnvVariables struct {
@@ -17,10 +15,6 @@ type EnvVariables struct {
 var Env *EnvVariables
 
 func LoadEnvVariables() error {
-	if err := godotenv.Load(); err != nil {
-		return err
-	}
-
 	if err := validateEnvVariables(); err != nil {
 		return err
 	}
