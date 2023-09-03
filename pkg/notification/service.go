@@ -41,8 +41,7 @@ func (s *service) CreateNotification(createNotificationDto *notification_dto.Cre
 		LineNumber:   createNotificationDto.LineNumber,
 	}
 
-	_, err := s.collection.InsertOne(context.Background(), notification)
-	if err != nil {
+	if _, err := s.collection.InsertOne(context.Background(), notification); err != nil {
 		logger.Logger.Errorf("error creating notification, err: %v", err)
 		return nil, err
 	}
@@ -91,13 +90,11 @@ func (s *service) UpdateNotification(notificationId primitive.ObjectID, updateNo
 		return err
 	}
 
-	_, err = s.collection.UpdateOne(
+	if _, err = s.collection.UpdateOne(
 		context.Background(),
 		bson.M{"_id": notificationId},
 		bson.M{"$set": updateNotificationDataDoc},
-	)
-
-	if err != nil {
+	); err != nil {
 		logger.Logger.Errorf("error updating notification with ID: %v, err: %v", notificationId, err)
 		return err
 	}

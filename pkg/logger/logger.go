@@ -6,6 +6,7 @@ var Logger *zap.SugaredLogger
 
 func InitLogger() error {
 	logger, err := zap.NewProduction()
+
 	if err != nil {
 		return err
 	}

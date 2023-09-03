@@ -15,7 +15,9 @@ const NIGHT_LINE_PREFIX = 'N'
 const ZTM_NIGHT_LINE_PREFIX = '4'
 
 func shouldDeliverZtmNotification(notification notification.Notification) bool {
-	getZtmSchedulesEndpoint := getZtmSchedulesEndpoint(notification.LineNumber)
+	ztmLineNumber := parseZtmNightLineNumber(notification.LineNumber)
+
+	getZtmSchedulesEndpoint := getZtmSchedulesEndpoint(ztmLineNumber)
 	schedules, err := http_client.Get(getZtmSchedulesEndpoint)
 
 	if err != nil {
@@ -23,22 +25,22 @@ func shouldDeliverZtmNotification(notification notification.Notification) bool {
 		return false
 	}
 
-	stopIdNumber, err := strconv.ParseFloat(notification.StopId, 64)
+	stopIdFloat, err := strconv.ParseFloat(notification.StopId, 64)
 
 	if err != nil {
 		logger.Logger.Errorf("error parsing notification stopId: %s, err: %v", notification.StopId, err)
 		return false
 	}
 
-	lineNumber, err := strconv.ParseFloat(parseZtmNightLineNumber(notification.LineNumber), 64)
+	lineNumberFloat, err := strconv.ParseFloat(ztmLineNumber, 64)
 
 	if err != nil {
-		logger.Logger.Errorf("error parsing notification lineNumber: %s, err: %v", notification.LineNumber, err)
+		logger.Logger.Errorf("error parsing notification lineNumber: %s, err: %v", ztmLineNumber, err)
 		return false
 	}
 
 	for _, schedule := range schedules["stopTimes"].([]interface{}) {
-		if schedule.(map[string]interface{})["stopId"] == stopIdNumber && schedule.(map[string]interface{})["routeId"] == lineNumber {
+		if schedule.(map[string]interface{})["stopId"] == stopIdFloat && schedule.(map[string]interface{})["routeId"] == lineNumberFloat {
 			minutesToDeparture, err := getMinuteDifference(schedule.(map[string]interface{})["date"].(string), schedule.(map[string]interface{})["departureTime"].(string))
 
 			if err != nil {
@@ -54,21 +56,21 @@ func shouldDeliverZtmNotification(notification notification.Notification) bool {
 	return false
 }
 
-func getZtmSchedulesEndpoint(lineNumber string) string {
-	currentDate := time.Now().UTC().Format("2006-01-02")
-
-	return "https://ckan2.multimediagdansk.pl/stopTimes?date=" + currentDate + "&routeId=" + lineNumber
-}
-
 func parseZtmNightLineNumber(lineNumber string) string {
-	if lineNumber[0] == ZTM_NIGHT_LINE_PREFIX {
+	if lineNumber[0] == NIGHT_LINE_PREFIX && len(lineNumber) > 1 {
 		nightLineNumber := []rune(lineNumber)
-		nightLineNumber[0] = rune(NIGHT_LINE_PREFIX)
+		nightLineNumber[0] = rune(ZTM_NIGHT_LINE_PREFIX)
 
 		return string(nightLineNumber)
 	}
 
 	return lineNumber
+}
+
+func getZtmSchedulesEndpoint(lineNumber string) string {
+	currentDate := time.Now().UTC().Format("2006-01-02")
+
+	return "https://ckan2.multimediagdansk.pl/stopTimes?date=" + currentDate + "&routeId=" + lineNumber
 }
 
 func getMinuteDifference(ztmDate string, ztmIso string) (int, error) {

@@ -8,5 +8,5 @@ type CreateNotificationDto struct {
 	ProviderName types.ScheduleProviderName `json:"providerName" validate:"supportedProvider" example:"ztm"`
 	StopId       string                     `json:"stopId" validate:"required,numeric" example:"1461"`
 	StopName     string                     `json:"stopName" validate:"required" example:"Przymorze Wielkie"`
-	LineNumber   string                     `json:"lineNumber" validate:"required,numeric" example:"199"`
+	LineNumber   string                     `json:"lineNumber" validate:"required" example:"199"`
 }
