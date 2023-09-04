@@ -26,10 +26,7 @@ func NewZtmService() ZtmService {
 
 func (s *ztmService) GetStopById(stopId string) (*entities.ZtmStop, error) {
 	var stop entities.ZtmStop
-
-	err := s.collection.FindOne(context.Background(), bson.M{"stopId": stopId}).Decode(&stop)
-
-	if err != nil {
+	if err := s.collection.FindOne(context.Background(), bson.M{"stopId": stopId}).Decode(&stop); err != nil {
 		logger.Logger.Errorf("error fetching stop by ID: %s, err: %v", stopId, err)
 		return nil, err
 	}

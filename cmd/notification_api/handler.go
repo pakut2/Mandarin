@@ -20,13 +20,11 @@ import (
 func CreateNotification(service notification.Service) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var createNotificationDto notification_dto.CreateNotificationDto
-
 		if err := server.ParseBody(c, &createNotificationDto); err != nil {
 			return c.Status(http.StatusBadRequest).JSON(err.Error())
 		}
 
 		notification, err := service.CreateNotification(&createNotificationDto)
-
 		if err != nil {
 			return c.Status(http.StatusInternalServerError).JSON(err.Error())
 		}

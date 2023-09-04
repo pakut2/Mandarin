@@ -17,7 +17,6 @@ import (
 func GetZtmStopLineNumbers(service ZtmService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		stopId := c.Params("stopId")
-
 		if stopId == "" {
 			logger.Logger.Errorf("stopId route param not provided")
 			return c.Status(http.StatusBadRequest).JSON(fiber.Map{"message": "stopId route param not provided"})

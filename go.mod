@@ -1,6 +1,6 @@
 module github.com/pakut2/mandarin
 
-go 1.19
+go 1.21
 
 require (
 	cloud.google.com/go v0.110.6 // indirect

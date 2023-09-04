@@ -14,8 +14,8 @@ import (
 
 type Service interface {
 	CreateNotification(*notification_dto.CreateNotificationDto) (*Notification, error)
-	GetNotifications(GetNotificationsFilter) (*[]Notification, error)
-	UpdateNotification(primitive.ObjectID, UpdateNotificationData) error
+	GetNotifications(Notification) (*[]Notification, error)
+	UpdateNotification(primitive.ObjectID, Notification) error
 }
 
 type service struct {
@@ -49,27 +49,20 @@ func (s *service) CreateNotification(createNotificationDto *notification_dto.Cre
 	return &notification, nil
 }
 
-type GetNotificationsFilter struct {
-	Delivered bool `bson:"delivered"`
-}
-
-func (s *service) GetNotifications(getNotificationsFilter GetNotificationsFilter) (*[]Notification, error) {
-	getNotificationsFilterDoc, err := database.ToDoc(getNotificationsFilter)
-
+func (s *service) GetNotifications(notificationsFilter Notification) (*[]Notification, error) {
+	notificationsFilterDoc, err := database.ToDoc(notificationsFilter)
 	if err != nil {
-		logger.Logger.Errorf("error parsing notifications filter data: %v, err: %v", getNotificationsFilter, err)
+		logger.Logger.Errorf("error parsing notifications filter data: %v, err: %v", notificationsFilter, err)
 		return nil, err
 	}
 
-	cursor, err := s.collection.Find(context.Background(), getNotificationsFilterDoc)
-
+	cursor, err := s.collection.Find(context.Background(), notificationsFilterDoc)
 	if err != nil {
 		logger.Logger.Errorf("error fetching notifications, err: %v", err)
 		return nil, err
 	}
 
 	notifications := make([]Notification, 0)
-
 	if err = cursor.All(context.TODO(), &notifications); err != nil {
 		logger.Logger.Errorf("error parsing notifications, err: %v", err)
 		return nil, err
@@ -78,22 +71,17 @@ func (s *service) GetNotifications(getNotificationsFilter GetNotificationsFilter
 	return &notifications, nil
 }
 
-type UpdateNotificationData struct {
-	Delivered bool `bson:"delivered"`
-}
-
-func (s *service) UpdateNotification(notificationId primitive.ObjectID, updateNotificationData UpdateNotificationData) error {
-	updateNotificationDataDoc, err := database.ToDoc(updateNotificationData)
-
+func (s *service) UpdateNotification(notificationId primitive.ObjectID, notificationUpdateData Notification) error {
+	notificationUpdateDataDoc, err := database.ToDoc(notificationUpdateData)
 	if err != nil {
-		logger.Logger.Errorf("error parsing notification update data: %v, for notification with ID: %v, err: %v", updateNotificationData, notificationId, err)
+		logger.Logger.Errorf("error parsing notification update data: %v, err: %v", notificationUpdateData, err)
 		return err
 	}
 
 	if _, err = s.collection.UpdateOne(
 		context.Background(),
 		bson.M{"_id": notificationId},
-		bson.M{"$set": updateNotificationDataDoc},
+		bson.M{"$set": notificationUpdateDataDoc},
 	); err != nil {
 		logger.Logger.Errorf("error updating notification with ID: %v, err: %v", notificationId, err)
 		return err

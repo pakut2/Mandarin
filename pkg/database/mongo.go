@@ -40,13 +40,11 @@ func GetCollection(name string) *mongo.Collection {
 
 func ToDoc(data interface{}) (*bson.M, error) {
 	bsonData, err := bson.Marshal(data)
-
 	if err != nil {
 		return nil, err
 	}
 
 	var document *bson.M
-
 	if err := bson.Unmarshal(bsonData, &document); err != nil {
 		return nil, err
 	}

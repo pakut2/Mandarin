@@ -11,8 +11,8 @@ import (
 
 func InitScanner(firebaseAdmin *firebase.App) {
 	notificationService := notification.NewService()
-	messagingService, err := firebase_admin.NewMessagingService(firebaseAdmin)
 
+	messagingService, err := firebase_admin.NewMessagingService(firebaseAdmin)
 	if err != nil {
 		panic(err)
 	}
