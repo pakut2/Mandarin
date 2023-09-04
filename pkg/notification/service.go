@@ -7,6 +7,7 @@ import (
 	notification_dto "github.com/pakut2/mandarin/cmd/notification_api/dto"
 	"github.com/pakut2/mandarin/pkg/database"
 	"github.com/pakut2/mandarin/pkg/logger"
+	"github.com/pakut2/mandarin/pkg/utilities"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -31,7 +32,7 @@ func NewService() Service {
 func (s *service) CreateNotification(createNotificationDto *notification_dto.CreateNotificationDto) (*Notification, error) {
 	notification := Notification{
 		Id:           primitive.NewObjectID(),
-		Delivered:    false,
+		Delivered:    utilities.BoolPointer(false),
 		CreatedAt:    time.Now(),
 		DeviceToken:  createNotificationDto.DeviceToken,
 		ReminderTime: createNotificationDto.ReminderTime,

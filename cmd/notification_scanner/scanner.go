@@ -7,14 +7,13 @@ import (
 	firebase_admin "github.com/pakut2/mandarin/pkg/firebase"
 	"github.com/pakut2/mandarin/pkg/logger"
 	notification_pkg "github.com/pakut2/mandarin/pkg/notification"
+	"github.com/pakut2/mandarin/pkg/utilities"
 )
-
-const MAX_NOTIFICATION_DELIVERY_ATTEMPTS = 3
 
 func scanNotifications(notificationService notification_pkg.Service, messagingService firebase_admin.MessagingService) {
 	logger.Logger.Info("Scanning notifications")
 
-	notifications, err := notificationService.GetNotifications(notification_pkg.Notification{Delivered: false})
+	notifications, err := notificationService.GetNotifications(notification_pkg.Notification{Delivered: utilities.BoolPointer(false)})
 	if err != nil {
 		return
 	}
@@ -32,6 +31,6 @@ func scanNotifications(notificationService notification_pkg.Service, messagingSe
 		notificationBody := notification.LineNumber + " departs in " + strconv.Itoa(notification.ReminderTime) + "min"
 		messagingService.SendMessage(notification.DeviceToken, notification.StopName, notificationBody)
 
-		notificationService.UpdateNotification(notification.Id, notification_pkg.Notification{Delivered: true})
+		notificationService.UpdateNotification(notification.Id, notification_pkg.Notification{Delivered: utilities.BoolPointer(true)})
 	}
 }
