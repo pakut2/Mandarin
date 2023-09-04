@@ -34,7 +34,7 @@ func (s *messagingService) SendMessage(deviceToken string, title string, payload
 		&messaging.Message{
 			Token:        deviceToken,
 			Notification: &messaging.Notification{Title: title, Body: payload},
-			Android:      &messaging.AndroidConfig{Notification: &messaging.AndroidNotification{Priority: messaging.PriorityHigh}}})
+		})
 
 	if err != nil {
 		logger.Logger.Errorf("error sending message, err: %v", err)
