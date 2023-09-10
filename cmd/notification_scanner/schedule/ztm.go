@@ -10,7 +10,6 @@ import (
 	"github.com/pakut2/mandarin/pkg/notification"
 )
 
-const ZTM_TIMEZONE = "Europe/Warsaw"
 const NIGHT_LINE_PREFIX = 'N'
 const ZTM_NIGHT_LINE_PREFIX = '4'
 
@@ -20,19 +19,19 @@ func shouldDeliverZtmNotification(notification notification.Notification) bool {
 
 	schedules, err := http_client.Get(getZtmSchedulesEndpoint)
 	if err != nil {
-		logger.Logger.Errorf("error fething schedules from: %s, err: %v", getZtmSchedulesEndpoint, err)
+		logger.Logger.Errorf("Error fething schedules from: %s, err: %v", getZtmSchedulesEndpoint, err)
 		return false
 	}
 
 	stopIdFloat, err := strconv.ParseFloat(notification.StopId, 64)
 	if err != nil {
-		logger.Logger.Errorf("error parsing notification stopId: %s, err: %v", notification.StopId, err)
+		logger.Logger.Errorf("Error parsing notification stopId: %s, err: %v", notification.StopId, err)
 		return false
 	}
 
 	lineNumberFloat, err := strconv.ParseFloat(ztmLineNumber, 64)
 	if err != nil {
-		logger.Logger.Errorf("error parsing notification lineNumber: %s, err: %v", ztmLineNumber, err)
+		logger.Logger.Errorf("Error parsing notification lineNumber: %s, err: %v", ztmLineNumber, err)
 		return false
 	}
 
@@ -64,29 +63,35 @@ func parseZtmNightLineNumber(lineNumber string) string {
 }
 
 func getZtmSchedulesEndpoint(lineNumber string) string {
-	currentDate := time.Now().UTC().Format("2006-01-02")
+	currentDate := time.Now().In(getZtmTimezone()).Format("2006-01-02")
 
 	return "https://ckan2.multimediagdansk.pl/stopTimes?date=" + currentDate + "&routeId=" + lineNumber
 }
 
-func getMinuteDifference(ztmDate string, ztmIso string) (int, error) {
+func getZtmTimezone() *time.Location {
+	ztmTimezone, _ := time.LoadLocation("Europe/Warsaw")
+
+	return ztmTimezone
+}
+
+func getMinuteDifference(departureDate string, departureIsoDateTime string) (int, error) {
 	currentDate := time.Now().UTC()
-	ztmIsoParts := strings.Split(ztmIso, "T")
-	ztmTime := ztmIsoParts[len(ztmIsoParts)-1]
+	splitDepartureIsoDateTime := strings.Split(departureIsoDateTime, "T")
+	departureTime := splitDepartureIsoDateTime[len(splitDepartureIsoDateTime)-1]
 
-	ztmIsoWithCorrectDate, err := time.Parse("2006-01-02T15:04:05", ztmDate+"T"+ztmTime)
+	departureIsoDateTimeWithCorrectDate, err := time.Parse("2006-01-02T15:04:05", departureDate+"T"+departureTime)
 	if err != nil {
-		logger.Logger.Errorf("error converting date: %s, err: %v", ztmDate+"T"+ztmTime, err)
+		logger.Logger.Errorf("Error converting date: %s, err: %v", departureDate+"T"+departureTime, err)
 		return 0, err
 	}
 
-	ztmTimezone, err := time.LoadLocation(ZTM_TIMEZONE)
-	if err != nil {
-		logger.Logger.Errorf("error creating timezone, err: %v", err)
-		return 0, err
+	ztmTimezone := getZtmTimezone()
+
+	if currentDate.In(ztmTimezone).Hour() == 23 && departureIsoDateTimeWithCorrectDate.Hour() == 0 {
+		departureIsoDateTimeWithCorrectDate = departureIsoDateTimeWithCorrectDate.AddDate(0, 0, 1)
 	}
 
-	ztmIsoReconciliated := time.Date(ztmIsoWithCorrectDate.Year(), ztmIsoWithCorrectDate.Month(), ztmIsoWithCorrectDate.Day(), ztmIsoWithCorrectDate.Hour(), ztmIsoWithCorrectDate.Minute(), 0, 0, ztmTimezone)
+	departureDateTimeReconciliated := time.Date(departureIsoDateTimeWithCorrectDate.Year(), departureIsoDateTimeWithCorrectDate.Month(), departureIsoDateTimeWithCorrectDate.Day(), departureIsoDateTimeWithCorrectDate.Hour(), departureIsoDateTimeWithCorrectDate.Minute(), 0, 0, ztmTimezone)
 
-	return int(ztmIsoReconciliated.Sub(currentDate).Minutes()), nil
+	return int(departureDateTimeReconciliated.Sub(currentDate).Minutes()), nil
 }
