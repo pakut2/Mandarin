@@ -12,18 +12,18 @@ import (
 func Get(url string) (map[string]interface{}, error) {
 	res, err := http.Get(url)
 	if err != nil {
-		logger.Logger.Errorf("error fetching %s, err: %v", url, err)
+		logger.Logger.Errorf("Error fetching %s, err: %v", url, err)
 		return nil, err
 	}
 
 	if res.StatusCode != http.StatusOK {
-		logger.Logger.Errorf("request falied with status code %d", res.StatusCode)
+		logger.Logger.Errorf("Request falied with status code %d", res.StatusCode)
 		return nil, errors.New("request failed")
 	}
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		logger.Logger.Errorf("error reading response, err: %v", err)
+		logger.Logger.Errorf("Error reading response, err: %v", err)
 		return nil, err
 	}
 

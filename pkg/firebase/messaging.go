@@ -19,7 +19,7 @@ type messagingService struct {
 func NewMessagingService(firebaseAdmin *firebase.App) (MessagingService, error) {
 	messaging, err := firebaseAdmin.Messaging(context.Background())
 	if err != nil {
-		logger.Logger.Errorf("error getting Messaging client, err: %v", err)
+		logger.Logger.Errorf("Error getting Messaging client, err: %v", err)
 		return nil, err
 	}
 
@@ -37,10 +37,10 @@ func (s *messagingService) SendMessage(deviceToken string, title string, payload
 		})
 
 	if err != nil {
-		logger.Logger.Errorf("error sending message, err: %v", err)
+		logger.Logger.Errorf("Error sending message, err: %v", err)
 		return err
 	}
 
-	logger.Logger.Infof("message with ID: %s sent successfully", messageId)
+	logger.Logger.Infof("Message with ID: %s sent successfully", messageId)
 	return nil
 }

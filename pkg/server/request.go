@@ -7,12 +7,12 @@ import (
 
 func ParseBody(c *fiber.Ctx, body interface{}) error {
 	if err := c.BodyParser(&body); err != nil {
-		logger.Logger.Errorf("error parsing request body, err: %v", err)
+		logger.Logger.Errorf("Error parsing request body: %v, err: %v", body, err)
 		return err
 	}
 
 	if err := Validate.Struct(body); err != nil {
-		logger.Logger.Errorf("error validating request body, err: %v", err)
+		logger.Logger.Errorf("Error validating request body: %v, err: %v", body, err)
 		return err
 	}
 

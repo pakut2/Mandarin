@@ -18,7 +18,7 @@ func GetScheduleProvider(providerName types.ScheduleProviderName) (ScheduleProvi
 	case constants.ZTM:
 		return ScheduleProvider{ShouldDeliverNotification: shouldDeliverZtmNotification}, nil
 	default:
-		logger.Logger.Errorf("unsuported provider: %s", providerName)
-		return ScheduleProvider{}, errors.New("unsuported provider")
+		logger.Logger.Errorf("Unsuported schedule provider: %s", providerName)
+		return ScheduleProvider{}, errors.New("unsuported schedule provider")
 	}
 }

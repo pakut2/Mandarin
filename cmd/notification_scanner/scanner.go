@@ -19,6 +19,8 @@ func scanNotifications(notificationService notification_pkg.Service, messagingSe
 	}
 
 	for _, notification := range *notifications {
+		logger.Logger.Infof("Processing notification with ID: %v", notification.Id)
+
 		scheduleProvider, err := schedule.GetScheduleProvider(notification.ProviderName)
 		if err != nil {
 			continue
